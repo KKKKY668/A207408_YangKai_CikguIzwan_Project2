@@ -20,10 +20,10 @@ fun ActivityScreen(viewModel: WildLensViewModel, onBack: () -> Unit) {
 
     val profile by viewModel.userProfile.collectAsState()
 
-    // ★ 核心修改：动态获取 ViewModel 里的列表
+    // 动态获取 ViewModel 里的列表
     val logs by viewModel.activityLogs.collectAsState()
 
-    // 注意：一定要把你原本写在这里的 val logs = listOf(...) 删掉！
+    //
 
     WildLensTheme {
         Scaffold(
@@ -94,7 +94,7 @@ fun ActivityScreen(viewModel: WildLensViewModel, onBack: () -> Unit) {
 
                     Spacer(modifier = Modifier.height(4.dp))
                 }
-
+                //遍历所有
                 itemsIndexed(logs) { _, log ->
                     ActivityLogCard(log = log)
                 }
@@ -113,14 +113,14 @@ fun ActivityLogCard(log: ActivityLog) {
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 3.dp)
     ) {
         Row(
-            modifier = Modifier.padding(12.dp),
+            modifier = Modifier.padding(16.dp),   //这里
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            horizontalArrangement = Arrangement.spacedBy(16.dp) //这里
         ) {
             Surface(
                 color = MaterialTheme.colorScheme.secondaryContainer,
                 shape = RoundedCornerShape(12.dp),
-                modifier = Modifier.size(48.dp)
+                modifier = Modifier.size(52.dp) //这里
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_binoculars),

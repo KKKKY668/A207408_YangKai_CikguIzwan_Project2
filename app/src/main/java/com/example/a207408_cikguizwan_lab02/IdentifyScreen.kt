@@ -23,7 +23,7 @@ fun IdentifyScreen(viewModel: WildLensViewModel, onBack: () -> Unit) {
     var identified by remember { mutableStateOf(false) }
     var isScanning by remember { mutableStateOf(false) }
 
-    // ★ 优化2：用于页面动态展示随机出来的识别结果
+    // 用于页面动态展示随机出来的识别结果
     var currentSpecies by remember { mutableStateOf("Malayan Tiger") }
     var currentImage by remember { mutableIntStateOf(R.drawable.img_tiger) }
 
@@ -133,7 +133,8 @@ fun IdentifyScreen(viewModel: WildLensViewModel, onBack: () -> Unit) {
                     modifier = Modifier
                         .size(72.dp)
                         // 扫描时按钮底色变灰，提示用户无法点击
-                        .background(if (isScanning) Color.Gray else MaterialTheme.colorScheme.primary, CircleShape),
+                        //before  .background(if (isScanning) Color.Gray else MaterialTheme.colorScheme.primary, CircleShape),
+                        .background(if (isScanning) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.primary, CircleShape),
                     contentAlignment = Alignment.Center
                 ) {
                     IconButton(
@@ -144,7 +145,7 @@ fun IdentifyScreen(viewModel: WildLensViewModel, onBack: () -> Unit) {
                             coroutineScope.launch {
                                 delay(1500) // 模拟 1.5 秒的扫描延迟
 
-                                // ★ 优化2：题库，每次扫描随机出一个动物
+                                // 题库，每次扫描随机出一个动物
                                 val randomData = listOf(
                                     Pair("Malayan Tiger", R.drawable.img_tiger),
                                     Pair("Hornbill", R.drawable.img_hornbill),
@@ -159,7 +160,7 @@ fun IdentifyScreen(viewModel: WildLensViewModel, onBack: () -> Unit) {
                                 isScanning = false
                                 identified = true
 
-                                // ★ 核心逻辑：存入 ViewModel 以供 ActivityScreen 显示
+                                // 核心逻辑：存入 ViewModel 以供 ActivityScreen 显示
                                 val currentLocation = viewModel.userProfile.value.location.ifBlank { "Nearby" }
                                 viewModel.addActivityLog(
                                     ActivityLog(
@@ -171,7 +172,7 @@ fun IdentifyScreen(viewModel: WildLensViewModel, onBack: () -> Unit) {
                                 )
                             }
                         },
-                        // ★ 优化1：防狂点设计，扫描中直接禁用按钮
+                        // 防狂点设计，扫描中直接禁用按钮
                         enabled = !isScanning,
                         modifier = Modifier.size(72.dp)
                     ) {
@@ -199,12 +200,13 @@ fun IdentifyScreen(viewModel: WildLensViewModel, onBack: () -> Unit) {
                         }
                     }
 
-                    // ★ 优化3：成功添加的交互提示
+                    // 成功添加的交互提示
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = "✔ Successfully added to Activity Log",
                         style = MaterialTheme.typography.labelMedium,
-                        color = Color(0xFF4CAF50), // 环保绿色
+                        // before  color = Color(0xFF4CAF50),
+                        color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.Bold
                     )
                 }
