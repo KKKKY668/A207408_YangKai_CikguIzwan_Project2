@@ -13,17 +13,23 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.a207408_cikguizwan_lab02.ui.theme.WildLensTheme
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ActivityScreen(viewModel: WildLensViewModel, onBack: () -> Unit) {
-
+fun ActivityScreen(
+    viewModel: WildLensViewModel,
+    onBack: () -> Unit,
+    onCommunityClick: () -> Unit = {}
+) {
     val profile by viewModel.userProfile.collectAsState()
-
-    // 动态获取 ViewModel 里的列表
     val logs by viewModel.activityLogs.collectAsState()
+    val shareResult by viewModel.shareResult.collectAsState()
 
-    //
+    LaunchedEffect(shareResult) {
+        if (shareResult != null) {
+            kotlinx.coroutines.delay(2000)
+            viewModel.clearShareResult()
+        }
+    }
 
     WildLensTheme {
         Scaffold(
@@ -53,6 +59,8 @@ fun ActivityScreen(viewModel: WildLensViewModel, onBack: () -> Unit) {
             ) {
                 item {
                     Spacer(modifier = Modifier.height(8.dp))
+
+                    // 统计卡片
                     Surface(
                         color = MaterialTheme.colorScheme.primaryContainer,
                         shape = RoundedCornerShape(16.dp),
@@ -76,7 +84,39 @@ fun ActivityScreen(viewModel: WildLensViewModel, onBack: () -> Unit) {
                             }
                         }
                     }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    // Share 结果提示
+                    if (shareResult != null) {
+                        Surface(
+                            color = MaterialTheme.colorScheme.primaryContainer,
+                            shape = RoundedCornerShape(8.dp),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(
+                                text = shareResult!!,
+                                modifier = Modifier.padding(12.dp),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(4.dp))
+                    }
+
+                    // Community 入口按钮
+                    Button(
+                        onClick = onCommunityClick,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp),
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
+                        Text("🌍 View Global Community Feed")
+                    }
+
                     Spacer(modifier = Modifier.height(4.dp))
+
                     if (profile.name.isNotEmpty()) {
                         Text(
                             text = "Recent sightings by ${profile.name}",
@@ -89,14 +129,13 @@ fun ActivityScreen(viewModel: WildLensViewModel, onBack: () -> Unit) {
                             style = MaterialTheme.typography.titleSmall,
                             color = MaterialTheme.colorScheme.secondary
                         )
-                    }//   val textText = if (profile.name.isBlank()) "Recent sightings" else "${profile.name} Recent sightings by "
-                    //    Text(textText, style = MaterialTheme.typography.titleLarge)
+                    }
 
                     Spacer(modifier = Modifier.height(4.dp))
                 }
-                //遍历所有
+
                 itemsIndexed(logs) { _, log ->
-                    ActivityLogCard(log = log)
+                    ActivityLogCard(log = log, onShare = { viewModel.shareToFirestore(it) })
                 }
 
                 item { Spacer(modifier = Modifier.height(16.dp)) }
@@ -106,21 +145,21 @@ fun ActivityScreen(viewModel: WildLensViewModel, onBack: () -> Unit) {
 }
 
 @Composable
-fun ActivityLogCard(log: ActivityLog) {
+fun ActivityLogCard(log: ActivityLog, onShare: (ActivityLog) -> Unit) {
     ElevatedCard(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 3.dp)
     ) {
         Row(
-            modifier = Modifier.padding(16.dp),   //这里
+            modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(16.dp) //这里
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Surface(
                 color = MaterialTheme.colorScheme.secondaryContainer,
                 shape = RoundedCornerShape(12.dp),
-                modifier = Modifier.size(52.dp) //这里
+                modifier = Modifier.size(52.dp)
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_binoculars),
@@ -154,11 +193,31 @@ fun ActivityLogCard(log: ActivityLog) {
                 }
             }
 
-            Text(
-                text = log.time,
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.secondary
-            )
+            // 右侧时间与分享按钮
+            Column(horizontalAlignment = Alignment.End) {
+                Text(
+                    text = log.time,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.secondary
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // 👇 把原来那个不起眼的 IconButton 换成了带文字的实体按钮
+                Button(
+                    onClick = { onShare(log) },
+                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 0.dp),
+                    modifier = Modifier.height(28.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary
+                    )
+                ) {
+                    Text(
+                        text = "Share ☁️",
+                        style = MaterialTheme.typography.labelSmall,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
         }
     }
 }

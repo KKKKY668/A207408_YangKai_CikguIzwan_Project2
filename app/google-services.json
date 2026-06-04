@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "426928784299",
+    "project_id": "wildlens-cc680",
+    "storage_bucket": "wildlens-cc680.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:426928784299:android:f93100ad8025c1061308ee",
+        "android_client_info": {
+          "package_name": "com.example.a207408_cikguizwan_lab02"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDE2ngCYy9MBS5PbVV-eZ1J4DKTXRtqZRU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

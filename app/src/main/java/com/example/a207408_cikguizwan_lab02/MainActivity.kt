@@ -54,7 +54,9 @@ fun WildLensApp(
     onProfileClick: () -> Unit = {},
     onMenuClick: () -> Unit = {},
     onIdentifyClick: () -> Unit = {},
-    onActivityClick: () -> Unit = {}
+    onActivityClick: () -> Unit = {},
+    onDiscoverClick: () -> Unit = {},
+    onCommunityClick: () -> Unit = {},
 ) {
     var selectedTab by remember { mutableStateOf(1) }
     var searchInput by remember { mutableStateOf("") }
@@ -69,9 +71,11 @@ fun WildLensApp(
                     selectedTab = index 
                     when(index) {
                         0 -> onMenuClick()
+                        1 -> onDiscoverClick()
                         2 -> onIdentifyClick()
                         3 -> onProfileClick()
                         4 -> onActivityClick()
+
                     }
                 }
             )
