@@ -79,7 +79,7 @@ WildLens encourages users to actively participate in biodiversity conservation b
 
 1. Clone this repository
 ```bash
-   git clone https://github.com/[YourUsername]/[RepoName].git
+   git clone [https://github.com/KKKKY668/A207408_YangKai_CikguIzwan_Project2.git](https://github.com/KKKKY668/A207408_YangKai_CikguIzwan_Project2.git)
 ```
 2. Open in Android Studio (Hedgehog or later)
 3. Add your own `google-services.json` from Firebase Console into the `app/` folder
